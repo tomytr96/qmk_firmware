@@ -33,16 +33,31 @@
 #include "os_detection.h"
 
 #include "keymap_french.h"
-
-
 #include "keymap_french_mac_iso.h"
 #include "sendstring_french_mac_iso.h"
 
-enum preonic_layers { _MAC, _WIN, _NUMBERS, _ALTGR, _LOWER, _RAISE, _BOTH, _TJRPLUS };
+// char OS = '';
+
+enum preonic_layers { _BASE, _MAC, _WIN, _NUMBERS, _ALTGR, _LOWER, _RAISE, _BOTH, _TJRPLUS };
 
 enum preonic_keycodes { AZERTY = SAFE_RANGE, LOWER, RAISE, _APP_Arc, _APP_Beeper, _APP_Postman, _APP_Spotify, _APP_VSC };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+
+    /* _AZERTY
+     * ,-----------------------------------------------------------------------------------.
+     * |Esc   |   &  |   é  |   "  |   '  |   (  |   §  |   è  |   !  |   ç  |   à  | Bksp |
+     * |------+------+------+------+------+------+------+------+------+------+------+------|
+     * |Tab   |   A  |   Z  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  |     ^|
+     * |------+------+------+------+------+------+------+------+------+------+------+------|
+     * |@ +NUM|   Q  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   M  |     ù|
+     * |------+------+------+------+------+------+------+------+------+------+------+------|
+     * |LShift|   W  |   X  |   C  |   V  |   B  |   N  |  ,   |   ;  |   :  |   =  |ENT+Sh|
+     * |------+------+------+------+------+------+------+------+------+------+------+------|
+     * |LCtrl |LCtrl | Alt  | CMD  |Lower |    Space    | Raise| AltGr|      |      |      |
+     * `-----------------------------------------------------------------------------------'
+     */
+    [_BASE] = LAYOUT_preonic_grid(KC_ESC, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BSPC, KC_TAB, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MO(_NUMBERS), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_LSFT, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, SFT_T(KC_ENT), KC_LCTL, _______, _______, _______, LOWER, KC_SPC, KC_SPC, RAISE, MO(_ALTGR), _______, _______, _______),
 
     /* BASE MAC
      * ,-----------------------------------------------------------------------------------.
@@ -57,17 +72,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |LCtrl |LCtrl | Alt  | CMD  |Lower |    Space    | Raise| AltGr|      |      |      |
      * `-----------------------------------------------------------------------------------'
      */
-    [_MAC] = LAYOUT_preonic_grid(
-        KC_ESC,       MFR_AMPR, MFR_LEAC, MFR_DQUO, MFR_QUOT, MFR_LPRN, MFR_SECT, MFR_LEGR, MFR_EXLM,   MFR_LCCE, MFR_LAGR, KC_BSPC,
-        KC_TAB,       MFR_A,    MFR_Z,    MFR_E,    MFR_R,    MFR_T,    MFR_Y,    MFR_U,    MFR_I,      MFR_O,    MFR_P,    MFR_CIRC,
-        MO(_NUMBERS), MFR_Q,    MFR_S,    MFR_D,    MFR_F,    MFR_G,    MFR_H,    MFR_J,    MFR_K,      MFR_L,    MFR_M,    KC_QUOT,
-        KC_LSFT,      MFR_W,    MFR_X,    MFR_C,    MFR_V,    MFR_B,    MFR_N,    MFR_COMM, MFR_SCLN,   MFR_COLN, MFR_EQL,  SFT_T(KC_ENT),
-        KC_LCTL,      _______,  KC_LALT,  KC_LGUI,  LOWER,    KC_SPC,   KC_SPC,   RAISE,    MO(_ALTGR), XXXXXXX,  XXXXXXX,  XXXXXXX
-        ),
+    [_MAC] = LAYOUT_preonic_grid(_______, MFR_AMPR, MFR_LEAC, MFR_DQUO, MFR_QUOT, MFR_LPRN, MFR_SECT, MFR_LEGR, MFR_EXLM, MFR_LCCE, MFR_LAGR, _______, _______, MFR_A, MFR_Z, MFR_E, MFR_R, MFR_T, MFR_Y, MFR_U, MFR_I, MFR_O, MFR_P, MFR_CIRC, _______, MFR_Q, MFR_S, MFR_D, MFR_F, MFR_G, MFR_H, MFR_J, MFR_K, MFR_L, MFR_M, KC_QUOT, _______, MFR_W, MFR_X, MFR_C, MFR_V, MFR_B, MFR_N, MFR_COMM, MFR_SCLN, MFR_COLN, MFR_EQL, _______, _______, _______, KC_LALT, KC_LGUI, _______, _______, _______, _______, _______, _______, _______, _______),
 
     /* BASE WINDOWS
      * ,-----------------------------------------------------------------------------------.
-     * |Esc   |   &  |   é  |   "  |   '  |   (  |   §  |   è  |   !  |   ç  |   à  | Bksp |
+     * |Esc   |   &  |   é  |   "  |   '  |   (  |   -  |   è  |   _  |   ç  |   à  | Bksp |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
      * |Tab   |   A  |   Z  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  |     ^|
      * |------+------+------+------+------+------+------+------+------+------+------+------|
@@ -78,13 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |LCtrl |LCtrl | Win  | Alt  |Lower |    Space    | Raise| AltGr|      |      |      |
      * `-----------------------------------------------------------------------------------'
      */
-    [_WIN] = LAYOUT_preonic_grid(
-        KC_ESC,       FR_AMPR, FR_EACU, FR_DQUO, FR_QUOT, FR_LPRN, FR_MINS, FR_EGRV, FR_UNDS,    FR_CCED, FR_AGRV, KC_BSPC,
-        KC_TAB,       FR_A,    FR_Z,    FR_E,    FR_R,    FR_T,    FR_Y,    FR_U,    FR_I,       FR_O,    FR_P,    FR_CIRC,
-        MO(_NUMBERS), FR_Q,    FR_S,    FR_D,    FR_F,    FR_G,    FR_H,    FR_J,    FR_K,       FR_L,    FR_M,    KC_QUOT,
-        KC_LSFT,      FR_W,    FR_X,    FR_C,    FR_V,    FR_B,    FR_N,    FR_COMM, FR_SCLN,    FR_COLN, FR_EQL,  SFT_T(KC_ENT),
-        KC_LCTL,      KC_LCTL, KC_LGUI, KC_LALT, LOWER,   KC_SPC,  KC_SPC,  RAISE,   MO(_ALTGR), XXXXXXX, XXXXXXX, XXXXXXX
-        ),
+    [_WIN] = LAYOUT_preonic_grid(_______, WFR_AMPR, WFR_EACU, WFR_DQUO, WFR_QUOT, WFR_LPRN, WFR_MINS, WFR_EGRV, WFR_UNDS, WFR_CCED, WFR_AGRV, _______, _______, WFR_A, WFR_Z, WFR_E, WFR_R, WFR_T, WFR_Y, WFR_U, WFR_I, WFR_O, WFR_P, WFR_CIRC, _______, WFR_Q, WFR_S, WFR_D, WFR_F, WFR_G, WFR_H, WFR_J, WFR_K, WFR_L, WFR_M, KC_QUOT, _______, WFR_W, WFR_X, WFR_C, WFR_V, WFR_B, WFR_N, WFR_COMM, WFR_SCLN, WFR_COLN, WFR_EQL, _______, _______, _______, KC_LGUI, KC_LALT, _______, _______, _______, _______, _______, _______, _______, _______),
 
     /* ARROW + NUMBERS
      * ,-----------------------------------------------------------------------------------.
@@ -99,13 +102,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |LCtrl |LCtrl | Alt  | CMD  |Lower |    Space    | Raise|   0  |  ,   |  .   |      |
      * `-----------------------------------------------------------------------------------'
      */
-    [_NUMBERS] = LAYOUT_preonic_grid(
-        _______, XXXXXXX,       XXXXXXX, XXXXXXX,        XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, MFR_SLSH, MFR_ASTR, _______,
-        _______, LGUI(KC_LEFT), KC_UP,   LGUI(KC_RIGHT), XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, MFR_7,   MFR_8,    MFR_9,    MFR_MINS,
-        _______, KC_LEFT,       KC_DOWN, KC_RIGHT,       XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, MFR_4,   MFR_5,    MFR_6,    MFR_PLUS,
-        _______, XXXXXXX,       XXXXXXX, XXXXXXX,        XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, MFR_1,   MFR_2,    MFR_3,    _______,
-        _______, _______,       _______, _______,        LOWER,   KC_ENTER, KC_SPC,  RAISE,   MFR_0,   MFR_COMM, MFR_DOT,  XXXXXXX
-        ),
+    [_NUMBERS] = LAYOUT_preonic_grid(_______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MFR_SLSH, MFR_ASTR, _______, _______, LGUI(KC_LEFT), KC_UP, LGUI(KC_RIGHT), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MFR_7, MFR_8, MFR_9, MFR_MINS, _______, KC_LEFT, KC_DOWN, KC_RIGHT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MFR_4, MFR_5, MFR_6, MFR_PLUS, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MFR_1, MFR_2, MFR_3, _______, _______, _______, _______, _______, LOWER, KC_ENTER, KC_SPC, RAISE, MFR_0, MFR_COMM, MFR_DOT, XXXXXXX),
 
     /* ALTGR
      * ,-----------------------------------------------------------------------------------.
@@ -120,13 +117,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |      |      |      |      |      |      |      |      |      |      |      |      |
      * `-----------------------------------------------------------------------------------'
      */
-    [_ALTGR] = LAYOUT_preonic_grid(
-        XXXXXXX, XXXXXXX, XXXXXXX, MFR_HASH, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, MFR_LABK, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, MFR_EURO, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX,  XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX,  XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX,  XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  LOWER,   XXXXXXX, XXXXXXX, RAISE,   MO(_ALTGR), XXXXXXX, XXXXXXX,  XXXXXXX
-        ),
+    [_ALTGR] = LAYOUT_preonic_grid(XXXXXXX, XXXXXXX, XXXXXXX, MFR_HASH, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MFR_LABK, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MFR_EURO, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LOWER, XXXXXXX, XXXXXXX, RAISE, MO(_ALTGR), XXXXXXX, XXXXXXX, _______),
 
     /* LOWER
      * ,-----------------------------------------------------------------------------------.
@@ -141,13 +132,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |      |      |      |      |      |      |      |      | Next | Vol- | Vol+ | Play |
      * `-----------------------------------------------------------------------------------'
      */
-    [_LOWER] = LAYOUT_preonic_grid(
-        XXXXXXX, XXXXXXX,       XXXXXXX,     XXXXXXX,        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MFR_LPRN, MFR_RPRN, MFR_MINS, KC_DEL,
-        XXXXXXX, LCTL(KC_DOWN), LCTL(KC_UP), XXXXXXX,        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MFR_LCBR, MFR_RCBR, MFR_UNDS, MFR_DLR,
-        XXXXXXX, LCTL(KC_LEFT), KC_F16,      LCTL(KC_RIGHT), XXXXXXX, XXXXXXX, KC_F18,  KC_F19,  MFR_LBRC, MFR_RBRC, XXXXXXX,  MFR_GRV,
-        KC_LSFT, KC_GRV,        KC_F17,      XXXXXXX,        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
-        XXXXXXX, XXXXXXX,       XXXXXXX,     XXXXXXX,        LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_MNXT,  KC_VOLD,  KC_VOLU,  KC_MPLY
-        ),
+    [_LOWER] = LAYOUT_preonic_grid(XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MFR_LPRN, MFR_RPRN, MFR_MINS, KC_DEL, XXXXXXX, LCTL(KC_DOWN), LCTL(KC_UP), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MFR_LCBR, MFR_RCBR, MFR_UNDS, MFR_DLR, XXXXXXX, LCTL(KC_LEFT), KC_F16, LCTL(KC_RIGHT), XXXXXXX, XXXXXXX, KC_F18, KC_F19, MFR_LBRC, MFR_RBRC, XXXXXXX, MFR_GRV, KC_LSFT, KC_GRV, KC_F17, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LOWER, KC_SPC, KC_SPC, RAISE, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY),
 
     /* RAISE
      * ,-----------------------------------------------------------------------------------.
@@ -162,13 +147,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |      |      |      |      |      |      |      |      | Next | Vol- | Vol+ | Play |
      * `-----------------------------------------------------------------------------------'
      */
-    [_RAISE] = LAYOUT_preonic_grid(
-        KC_GRV,  KC_1,                      KC_2,                    KC_3,                       KC_4,    KC_5,                    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
-        XXXXXXX, XXXXXXX,                   LGUI(LCTL(LALT(KC_UP))), LGUI(LCTL(LALT(MFR_Y))),    XXXXXXX, LGUI(LCTL(LALT(MFR_T))), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, LGUI(LCTL(LALT(KC_LEFT))), XXXXXXX,                 LGUI(LCTL(LALT(KC_RIGHT))), XXXXXXX, XXXXXXX,                 XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        KC_LSFT, XXXXXXX,                   XXXXXXX,                 XXXXXXX,                    XXXXXXX, XXXXXXX,                 XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX,                   XXXXXXX,                 XXXXXXX,                    LOWER,   KC_SPC,                  KC_SPC,  RAISE,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
-        ),
+    [_RAISE] = LAYOUT_preonic_grid(KC_GRV, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_BSPC, XXXXXXX, XXXXXXX, LGUI(LCTL(LALT(KC_UP))), LGUI(LCTL(LALT(MFR_Y))), XXXXXXX, LGUI(LCTL(LALT(MFR_T))), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LGUI(LCTL(LALT(KC_LEFT))), XXXXXXX, LGUI(LCTL(LALT(KC_RIGHT))), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LOWER, KC_SPC, KC_SPC, RAISE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX),
     /* BOTH (LOWER + RAISE)
      * ,-----------------------------------------------------------------------------------.
      * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
@@ -182,13 +161,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |      |      |      |      | LOWER|      |      |RAISE |      |      |      |      |
      * `-----------------------------------------------------------------------------------'
      */
-    [_BOTH] = LAYOUT_preonic_grid(
-        KC_F1,        KC_F2,    KC_F3,        KC_F4,   KC_F5,    KC_F6,       KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,       KC_F12,
-        MO(_TJRPLUS), _APP_Arc, XXXXXXX,      XXXXXXX, XXXXXXX,  XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _APP_Postman, XXXXXXX,
-        XXXXXXX,      XXXXXXX,  _APP_Spotify, XXXXXXX, XXXXXXX,  XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,      XXXXXXX,
-        XXXXXXX,      XXXXXXX,  XXXXXXX,      XXXXXXX, _APP_VSC, _APP_Beeper, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,      XXXXXXX,
-        XXXXXXX,      XXXXXXX,  XXXXXXX,      XXXXXXX, LOWER,    XXXXXXX,     XXXXXXX, RAISE,   XXXXXXX, XXXXXXX, XXXXXXX,      XXXXXXX
-        ),
+    [_BOTH] = LAYOUT_preonic_grid(KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, MO(_TJRPLUS), _APP_Arc, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _APP_Postman, XXXXXXX, XXXXXXX, XXXXXXX, _APP_Spotify, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _APP_VSC, _APP_Beeper, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LOWER, XXXXXXX, XXXXXXX, RAISE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX),
     /* TJRPLUS (LOWER + RAISE + TAB)
      * ,-----------------------------------------------------------------------------------.
      * |      |      |      |      |      |      |      |      |      |      |      |      |
@@ -202,13 +175,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |      |      |      |      | LOWER|      |      |RAISE |      |      |      |      |
      * `-----------------------------------------------------------------------------------'
      */
-    [_TJRPLUS] = LAYOUT_preonic_grid(
-        XXXXXXX,      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        MO(_TJRPLUS), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT,
-        XXXXXXX,      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DB_TOGG,
-        XXXXXXX,      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX,      XXXXXXX, XXXXXXX, XXXXXXX, LOWER,   XXXXXXX, XXXXXXX, RAISE,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
-        )};
+    [_TJRPLUS] = LAYOUT_preonic_grid(XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MO(_TJRPLUS), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DB_TOGG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LOWER, XXXXXXX, XXXXXXX, RAISE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX)};
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -280,10 +247,10 @@ bool process_detected_host_os_kb(os_variant_t detected_os) {
         case OS_IOS:
             break;
         case OS_MACOS:
-            set_single_persistent_default_layer(_MAC);
+            set_single_persistent_default_layer(_AZERTY_MAC);
             break;
         case OS_WINDOWS:
-            set_single_persistent_default_layer(_WIN);
+            set_single_persistent_default_layer(_AZERTY_WIN);
             break;
         case OS_LINUX:
             break;

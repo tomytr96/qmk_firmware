@@ -1,5 +1,4 @@
-/* Copyright 2015-2017 Jack Humbert
- * Updated for VIA 2021 George Wietor
+/* Copyright 2015-2021 Jack Humbert
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,185 +14,276 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * ,-----------------------------------------------------------------------------------.
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * `-----------------------------------------------------------------------------------'
+ */
+
 #include QMK_KEYBOARD_H
-#include "muse.h"
+
+#include "keymap_french_mac_iso.h"
+#include "sendstring_french_mac_iso.h"
+
+// char OS = '';
 
 enum preonic_layers {
-  _QWERTY,
-  _LOWER,
-  _RAISE,
-  _ADJUST
+    _AZERTY_MAC,
+    // _AZERTY_WIN,
+    _NUMBERS,
+    // _ALTGR,
+    _LOWER,
+    _RAISE,
+    // _BOTH,
+    // _TJRPLUS
+};
+
+enum preonic_keycodes {
+    AZERTY = SAFE_RANGE,
+    LOWER,
+    RAISE,
+    // _APP_Arc,
+    // _APP_Beeper,
+    // _APP_Postman,
+    // _APP_Spotify,
+    // _APP_VSC
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-/* Qwerty
+/* BASE MAC
  * ,-----------------------------------------------------------------------------------.
- * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Bksp |
+ * |Esc   |   &  |   é  |   "  |   '  |   (  |   §  |   è  |   !  |   ç  |   à  | Bksp |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | Tab  |   Q  |   W  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  | Del  |
- * |------+------+------+------+------+-------------+------+------+------+------+------|
- * | Esc  |   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  |  "   |
- * |------+------+------+------+------+------|------+------+------+------+------+------|
- * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Enter |
+ * |Tab   |   A  |   Z  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  |     ^|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      | Ctrl | Alt  | GUI  |Lower |    Space    |Raise | Left | Down |  Up  |Right |
+ * |@ +NUM|   Q  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   M  |     ù|
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |LShift|   W  |   X  |   C  |   V  |   B  |   N  |  ,   |   ;  |   :  |   =  |ENT+Sh|
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |LCtrl |LCtrl | Alt  | CMD  |Lower |    Space    | Raise| AltGr|      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
-[_QWERTY] = LAYOUT_preonic_grid(
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
-  KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
-  KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-  KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
-  _______, KC_LCTL, KC_LALT, KC_LGUI, TL_LOWR, KC_SPC,  KC_SPC,  TL_UPPR, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+[_AZERTY_MAC] = LAYOUT_preonic_grid(
+    KC_ESC,       FR_AMPR, FR_LEAC, FR_DQUO, FR_QUOT, FR_LPRN, FR_SECT, FR_LEGR, FR_EXLM,    FR_LCCE, FR_LAGR, KC_BSPC,
+    KC_TAB,       FR_A,    FR_Z,    FR_E,    FR_R,    FR_T,    FR_Y,    FR_U,    FR_I,       FR_O,    FR_P,    FR_CIRC,
+    MO(_NUMBERS), FR_Q,    FR_S,    FR_D,    FR_F,    FR_G,    FR_H,    FR_J,    FR_K,       FR_L,    FR_M,    KC_QUOT,
+    KC_LSFT,      FR_W,    FR_X,    FR_C,    FR_V,    FR_B,    FR_N,    FR_COMM, FR_SCLN,    FR_COLN, FR_EQL,  SFT_T(KC_ENT),
+    KC_LCTL,      KC_LCTL, KC_LALT, KC_LGUI, LOWER,   KC_SPC,  KC_SPC,  RAISE,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
 ),
 
-/* Lower
+// /* BASE WINDOWS
+//  * ,-----------------------------------------------------------------------------------.
+//  * |Esc   |   &  |   é  |   "  |   '  |   (  |   §  |   è  |   !  |   ç  |   à  | Bksp |
+//  * |------+------+------+------+------+------+------+------+------+------+------+------|
+//  * |Tab   |   A  |   Z  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  |     ^|
+//  * |------+------+------+------+------+------+------+------+------+------+------+------|
+//  * |@ +NUM|   Q  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   M  |     ù|
+//  * |------+------+------+------+------+------+------+------+------+------+------+------|
+//  * |LShift|   W  |   X  |   C  |   V  |   B  |   N  |  ,   |   ;  |   :  |   =  |ENT+Sh|
+//  * |------+------+------+------+------+------+------+------+------+------+------+------|
+//  * |LCtrl |LCtrl | Win  | Alt  |Lower |    Space    | Raise| AltGr|      |      |      |
+//  * `-----------------------------------------------------------------------------------'
+//  */
+// [_AZERTY_WIN] = LAYOUT_preonic_grid(
+//     KC_ESC,       FR_AMPR, FR_LEAC, FR_DQUO, FR_QUOT, FR_LPRN, FR_SECT, FR_LEGR, FR_EXLM,    FR_LCCE, FR_LAGR, KC_BSPC,
+//     KC_TAB,       FR_A,    FR_Z,    FR_E,    FR_R,    FR_T,    FR_Y,    FR_U,    FR_I,       FR_O,    FR_P,    FR_CIRC,
+//     MO(_NUMBERS), FR_Q,    FR_S,    FR_D,    FR_F,    FR_G,    FR_H,    FR_J,    FR_K,       FR_L,    FR_M,    KC_QUOT,
+//     KC_LSFT,      FR_W,    FR_X,    FR_C,    FR_V,    FR_B,    FR_N,    FR_COMM, FR_SCLN,    FR_COLN, FR_EQL,  SFT_T(KC_ENT),
+//     KC_LCTL,      KC_LCTL, KC_LGUI, KC_LALT, LOWER,   KC_SPC,  KC_SPC,  RAISE,   MO(_ALTGR), XXXXXXX, XXXXXXX, XXXXXXX
+// ),
+
+/* ARROW + NUMBERS
  * ,-----------------------------------------------------------------------------------.
- * |   ~  |   !  |   @  |   #  |   $  |   %  |   ^  |   &  |   *  |   (  |   )  | Bksp |
- * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |   ~  |   !  |   @  |   #  |   $  |   %  |   ^  |   &  |   *  |   (  |   )  | Del  |
- * |------+------+------+------+------+-------------+------+------+------+------+------|
- * | Del  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   _  |   +  |   {  |   }  |  |   |
- * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO ~ |ISO | |      |      |      |
+ * |Esc   |      |      |      |      |      |      |      |      |   /  |   *  | Bksp |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |             |      | Next | Vol- | Vol+ | Play |
+ * |Tab   | HOME |   ↑  |  END |      |      |      |      |   7  |   8  |   9  |   -  |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |@ +NUM|   ←  |   ↓  |   →  |      |      |      |      |   4  |   5  |   6  |   +  |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |LShift|      |      |      |      |      |      |      |   1  |   2  |   3  | Enter|
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |LCtrl |LCtrl | Alt  | CMD  |Lower |    Space    | Raise|   0  |  ,   |  .   |      |
+ * `-----------------------------------------------------------------------------------'
+ */
+[_NUMBERS] = LAYOUT_preonic_grid(
+    _______, XXXXXXX,       XXXXXXX, XXXXXXX,        XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX, XXXXXXX, FR_SLSH, FR_ASTR, _______,
+    _______, LGUI(KC_LEFT), KC_UP,   LGUI(KC_RIGHT), XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX, FR_7,    FR_8,    FR_9,    FR_MINS,
+    _______, KC_LEFT,       KC_DOWN, KC_RIGHT,       XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX, FR_4,    FR_5,    FR_6,    FR_PLUS,
+    _______, XXXXXXX,       XXXXXXX, XXXXXXX,        XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX, FR_1,    FR_2,    FR_3,    _______,
+    _______, _______,       _______, _______,        LOWER,   KC_ENTER,  KC_SPC,  RAISE,   FR_0,    FR_COMM, FR_DOT,  XXXXXXX
+),
+
+/* ALTGR
+ * ,-----------------------------------------------------------------------------------.
+ * |      |      |      |   #  |      |      |      |      |      |      |   @  |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |   €  |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * `-----------------------------------------------------------------------------------'
+ */
+// [_ALTGR] = LAYOUT_preonic_grid(
+//     XXXXXXX, XXXXXXX, XXXXXXX, FR_HASH, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, FR_LABK, XXXXXXX,
+//     XXXXXXX, XXXXXXX, XXXXXXX, FR_EURO, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX,
+//     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX,
+//     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX,
+//     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LOWER,   XXXXXXX, XXXXXXX, RAISE,   MO(_ALTGR), XXXXXXX, XXXXXXX, XXXXXXX
+// ),
+
+/* LOWER
+ * ,-----------------------------------------------------------------------------------.
+ * |      |      |      |      |      |      |      |      |   (  |   )  |   —  |   Del|
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |   {  |   }  |   _  |   $  |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |  F16 |  F17 |  F18 |  F19 |      |      |   [  |   ]  |      |   `  |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |LShift|   <  |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      | Next | Vol- | Vol+ | Play |
  * `-----------------------------------------------------------------------------------'
  */
 [_LOWER] = LAYOUT_preonic_grid(
-  KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC,
-  KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
-  KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE,
-  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,S(KC_NUHS),S(KC_NUBS),KC_HOME, KC_END, _______,
-  _______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY
+  XXXXXXX, XXXXXXX,       XXXXXXX,     XXXXXXX,        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, FR_LPRN, FR_RPRN, FR_MINS, KC_DEL,
+  XXXXXXX, LCTL(KC_DOWN), LCTL(KC_UP), XXXXXXX,        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, FR_LCBR, FR_RCBR, FR_UNDS, FR_DLR,
+  XXXXXXX, LCTL(KC_LEFT), KC_F16,      LCTL(KC_RIGHT), XXXXXXX, XXXXXXX, KC_F18,  KC_F19,  FR_LBRC, FR_RBRC, XXXXXXX, FR_GRV,
+  KC_LSFT, KC_GRV,        KC_F17,      XXXXXXX,        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  XXXXXXX, XXXXXXX,       XXXXXXX,     XXXXXXX,        LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY
 ),
 
-/* Raise
+/* RAISE
  * ,-----------------------------------------------------------------------------------.
  * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Bksp |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Del  |
- * |------+------+------+------+------+-------------+------+------+------+------+------|
- * | Del  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   -  |   =  |   [  |   ]  |  \   |
- * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO # |ISO / |      |      |      |
+ * |      |      | MvUp |2Edito|      |2Termi|      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |             |      | Next | Vol- | Vol+ | Play |
+ * |      |MvLeft|      |MvRigh|      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      | Next | Vol- | Vol+ | Play |
  * `-----------------------------------------------------------------------------------'
  */
 [_RAISE] = LAYOUT_preonic_grid(
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL,
-  KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS,
-  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_NUHS, KC_NUBS, KC_PGUP, KC_PGDN, _______,
-  _______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY
+    KC_GRV,  KC_1,                      KC_2,                    KC_3,                       KC_4,    KC_5,                   KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
+    XXXXXXX, XXXXXXX,                   LGUI(LCTL(LALT(KC_UP))), LGUI(LCTL(LALT(FR_Y))),     XXXXXXX, LGUI(LCTL(LALT(FR_T))), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT,
+    XXXXXXX, LGUI(LCTL(LALT(KC_LEFT))), XXXXXXX,                 LGUI(LCTL(LALT(KC_RIGHT))), XXXXXXX, XXXXXXX,                XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    KC_LSFT, XXXXXXX,                   XXXXXXX,                 XXXXXXX,                    XXXXXXX, XXXXXXX,                XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    XXXXXXX, XXXXXXX,                   XXXXXXX,                 XXXXXXX,                    LOWER,   KC_SPC,                 KC_SPC,  RAISE,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
 ),
-
-/* Adjust (Lower + Raise)
+// /* BOTH (LOWER + RAISE)
+//  * ,-----------------------------------------------------------------------------------.
+//  * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
+//  * |------+------+------+------+------+------+------+------+------+------+------+------|
+//  * |      |APArc |      |      |      |      |      |      |      |      |APPost|      |
+//  * |------+------+------+------+------+------+------+------+------+------+------+------|
+//  * |      |      |APspot|      |      |      |      |      |      |      |      |      |
+//  * |------+------+------+------+------+------+------+------+------+------+------+------|
+//  * |      |      |      |      |APvsc |      |      |      |      |      |      |      |
+//  * |------+------+------+------+------+------+------+------+------+------+------+------|
+//  * |      |      |      |      | LOWER|      |      |RAISE |      |      |      |      |
+//  * `-----------------------------------------------------------------------------------'
+//  */
+// [_BOTH] = LAYOUT_preonic_grid(
+//   KC_F1,        KC_F2,    KC_F3,        KC_F4,   KC_F5,    KC_F6,       KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,       KC_F12,
+//   MO(_TJRPLUS), _APP_Arc, XXXXXXX,      XXXXXXX, XXXXXXX,  XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _APP_Postman, XXXXXXX,
+//   XXXXXXX,      XXXXXXX,  _APP_Spotify, XXXXXXX, XXXXXXX,  XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,      XXXXXXX,
+//   XXXXXXX,      XXXXXXX,  XXXXXXX,      XXXXXXX, _APP_VSC, _APP_Beeper, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,      XXXXXXX,
+//   XXXXXXX,      XXXXXXX,  XXXXXXX,      XXXXXXX, LOWER,    XXXXXXX,     XXXXXXX, RAISE,   XXXXXXX, XXXXXXX, XXXXXXX,      XXXXXXX
+// ),
+/* TJRPLUS (LOWER + RAISE + TAB)
  * ,-----------------------------------------------------------------------------------.
- * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      | Reset| Debug|      |      |      |      |      |      |      |      |  Del |
- * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |      |Mu Mod|Aud on|AudOff|      |      |      |      |      |      |      |
- * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |      |      |Mus on|MusOff|      |      |      |      |      |      |      |
+ * |l_TJR+|      |      |      |      |      |      |      |      |      |      | Debug|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |             |      |      |      |      |      |
+ * |      |      |      |      |      |      |      |      |      |      |      | Reset|
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      | LOWER|      |      |RAISE |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
-[_ADJUST] = LAYOUT_preonic_grid(
-  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
-  _______, QK_BOOT, DB_TOGG, _______, _______, _______, _______, _______, _______, _______, _______, KC_DEL,
-  _______, _______, MU_NEXT, AU_ON,   AU_OFF,  _______, _______, _______, _______, _______, _______, _______,
-  _______, _______, _______, MU_ON,   MU_OFF,  _______, _______, _______, _______, _______, _______, _______,
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-)
-
-
+// [_TJRPLUS] = LAYOUT_preonic_grid(
+//   XXXXXXX,      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+//   MO(_TJRPLUS), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT,
+//   XXXXXXX,      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DB_TOGG,
+//   XXXXXXX,      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+//   XXXXXXX,      XXXXXXX, XXXXXXX, XXXXXXX, LOWER,   XXXXXXX, XXXXXXX, RAISE,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+// )
 };
 
-bool muse_mode = false;
-uint8_t last_muse_note = 0;
-uint16_t muse_counter = 0;
-uint8_t muse_offset = 70;
-uint16_t muse_tempo = 50;
-
-bool encoder_update_user(uint8_t index, bool clockwise) {
-  if (muse_mode) {
-    if (IS_LAYER_ON(_RAISE)) {
-      if (clockwise) {
-        muse_offset++;
-      } else {
-        muse_offset--;
-      }
-    } else {
-      if (clockwise) {
-        muse_tempo+=1;
-      } else {
-        muse_tempo-=1;
-      }
-    }
-  } else {
-    if (clockwise) {
-      register_code(KC_PGDN);
-      unregister_code(KC_PGDN);
-    } else {
-      register_code(KC_PGUP);
-      unregister_code(KC_PGUP);
-    }
-  }
-    return true;
-}
-
-bool dip_switch_update_user(uint8_t index, bool active) {
-    switch (index) {
-        case 0:
-            if (active) {
-                layer_on(_ADJUST);
-            } else {
-                layer_off(_ADJUST);
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case AZERTY:
+            if (record->event.pressed) {
+                set_single_persistent_default_layer(_AZERTY_MAC);
             }
+            return false;
             break;
-        case 1:
-            if (active) {
-                muse_mode = true;
+        case LOWER:
+            if (record->event.pressed) {
+                layer_on(_LOWER);
+                // update_tri_layer(_LOWER, _RAISE/*, _BOTH)*/;
             } else {
-                muse_mode = false;
+                layer_off(_LOWER);
+                // update_tri_layer(_LOWER, _RAISE, _BOTH);
             }
+            return false;
+            break;
+        case RAISE:
+            if (record->event.pressed) {
+                layer_on(_RAISE);
+                // update_tri_layer(_LOWER, _RAISE, _BOTH);
+            } else {
+                layer_off(_RAISE);
+                // update_tri_layer(_LOWER, _RAISE, _BOTH);
+            }
+            return false;
+            break;
+        // case _APP_Arc:
+        //     if (record->event.pressed) {
+        //         SEND_STRING(SS_LGUI(" ") SS_DELAY(50) "Arc\n");
+        //     }
+        //     return false;
+        //     break;
+        // case _APP_Beeper:
+        //     if (record->event.pressed) {
+        //         SEND_STRING(SS_LGUI(" ") SS_DELAY(50) "Beeper\n");
+        //     }
+        //     return false;
+        //     break;
+        // case _APP_Postman:
+        //     if (record->event.pressed) {
+        //         SEND_STRING(SS_LGUI(" ") SS_DELAY(50) "Postman\n");
+        //     }
+        //     return false;
+        //     break;
+        // case _APP_Spotify:
+        //     if (record->event.pressed) {
+        //         SEND_STRING(SS_LGUI(" ") SS_DELAY(50) "Spotify\n");
+        //     }
+        //     return false;
+        //     break;
+        // case _APP_VSC:
+        //     if (record->event.pressed) {
+        //         SEND_STRING(SS_LGUI(" ") SS_DELAY(50) "VSC\n");
+        //     }
+        //     return false;
+        //     break;
     }
     return true;
-}
-
-
-void matrix_scan_user(void) {
-#ifdef AUDIO_ENABLE
-    if (muse_mode) {
-        if (muse_counter == 0) {
-            uint8_t muse_note = muse_offset + SCALE[muse_clock_pulse()];
-            if (muse_note != last_muse_note) {
-                stop_note(compute_freq_for_midi_note(last_muse_note));
-                play_note(compute_freq_for_midi_note(muse_note), 0xF);
-                last_muse_note = muse_note;
-            }
-        }
-        muse_counter = (muse_counter + 1) % muse_tempo;
-    } else {
-        if (muse_counter) {
-            stop_all_notes();
-            muse_counter = 0;
-        }
-    }
-#endif
-}
-
-bool music_mask_user(uint16_t keycode) {
-  switch (keycode) {
-    case TL_LOWR:
-    case TL_UPPR:
-      return false;
-    default:
-      return true;
-  }
-}
+};

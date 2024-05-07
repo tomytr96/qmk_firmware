@@ -1,4 +1,9 @@
 {
     "url": "https://olkb.com/preonic",
-    "maintainer": "jackhumbert"
+    "maintainer": "jackhumbert",
+    "usb": {
+        "vid": "0x7975",
+        "pid": "0x8484"
+    },
+    "keyboard_name": "preonicv3"
 }
